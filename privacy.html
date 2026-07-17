@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Privacy — GeodeQR</title>
+<link rel="icon" href="assets/geodeqr-eye-64.png" type="image/png"/>
+<link rel="stylesheet" href="style.css?v=1"/>
+</head>
+<body>
+<header class="bar">
+  <a class="brand" href="index.html">
+    <img src="assets/geode-white-fill-mark.svg" alt="" width="26" height="26"/><span>GeodeQR</span>
+  </a>
+  <nav><a href="index.html">← Back to the tool</a></nav>
+</header>
+
+<main>
+  <section>
+    <h1>Privacy</h1>
+    <p class="sub">This isn't a policy. It's a description of how the thing is built.</p>
+
+    <h2>We never see what's in your code</h2>
+    <p>Your Wi-Fi password. Your contact details. The URL. Whatever you type is turned into a
+       QR code <strong>entirely inside your browser</strong>, by maths, on your machine. It is
+       never sent anywhere, because there is nowhere to send it — this site has no server, no
+       database and no backend of any kind.</p>
+    <p>We couldn't read your code's contents if we wanted to. That is a property of the
+       architecture, not a promise you have to take on faith.</p>
+
+    <h2>Check it yourself</h2>
+    <p>Open your browser's developer tools, switch to the Network tab, and <strong>make a
+       code</strong>. Watch the list: nothing new appears. The page loads its own files like any
+       page does, and then it never talks to anything again — no request carries what you typed,
+       because there is nowhere to carry it to.</p>
+    <p>The entire source is on <a href="https://github.com/GeodeForge/geodeqr" rel="noopener">GitHub</a>
+       — read it, fork it, or just pull the plug: turn your Wi-Fi off and open the page. It still
+       works. That is the proof, and you don't need to trust us for it.</p>
+
+    <h2>What we do collect</h2>
+    <p><strong>Page views, and nothing else.</strong> Our host counts requests at the server level,
+       the way every web server has since 1993 — roughly how many people arrived and from where.
+       There is <strong>no analytics script on this page</strong>, no cookie, no tracking pixel, no
+       fingerprinting, and no third-party JavaScript of any kind. We cannot tell one visitor from
+       another, and we never see what you put in a code.</p>
+    <p>We do not have accounts, so there is nothing to log in to and nothing to leak.</p>
+
+    <h2>The honest exceptions</h2>
+    <ul>
+      <li><strong>Contact</strong> is a <code>mailto:</code> link. If you email us, we obviously
+        receive your email. That's how email works.</li>
+      <li><strong>The printer link</strong> opens a map search in a new tab. We never ask for your
+        location — the map provider handles that on their own page, with their own consent
+        prompt. We never see where you are.</li>
+      <li><strong>The sticker link is an affiliate link.</strong> If you order through it we get a
+        small cut, at no cost to you. We're telling you because a site built around not hiding
+        the money shouldn't hide the money.</li>
+      <li><strong>Fonts are your system's own.</strong> We don't load Google Fonts, because that
+        would be a network request, and we'd rather have the empty Network tab.</li>
+    </ul>
+
+    <h2>Your codes outlive us</h2>
+    <p>A static QR code contains its data directly. It does not point at our server, because there
+       isn't one. If this site vanishes tomorrow, every code you ever made here keeps working —
+       forever. Nobody can expire them, revoke them, or hold them hostage. Not even us.</p>
+  </section>
+</main>
+
+<footer>
+  <span><a href="index.html">Tool</a> · <a href="contact.html">Contact</a> ·
+        <a href="mailto:qr@geodeforge.com">qr@geodeforge.com</a></span>
+  <span>A <a href="https://geodeforge.com">GeodeForge</a> tool</span>
+</footer>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>GeodeQR — free QR codes that never expire</title>
+<meta name="description" content="Free QR code generator. No account, no expiry, no watermark. Nothing leaves your browser."/>
+<link rel="icon" href="assets/geodeqr-eye-64.png" type="image/png"/>
+<link rel="stylesheet" href="style.css?v=1"/>
+<script>
+window.__geodeBoot = { errs: [] };
+window.addEventListener('error', function (e) {
+  var f = (e && e.filename) || (e && e.target && e.target.src) || '';
+  window.__geodeBoot.errs.push(((e && e.message) || 'load error') + ' @ ' +
+    String(f).split('/').pop().split('?')[0] + ':' + ((e && e.lineno) || 0));
+}, true);
+
+</script>
+</head>
+<body>
+
+<!--LANDING-SPLASH-->
+<div id="tsplash" aria-hidden="true">
+  <picture>
+    <source type="image/webp" media="(max-width:720px)" srcset="assets/poster-900.webp"/>
+    <source type="image/webp" srcset="assets/poster-1600.webp"/>
+    <img src="assets/poster-1600.jpg" alt="" width="1600" height="1600"/>
+  </picture>
+</div>
+<script>
+(function () {
+  var s = document.getElementById('tsplash');
+  if (!s) return;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { s.remove(); return; }
+  s.classList.add('on');
+  var img = s.querySelector('img'), dead = false;
+  function kill(fast) {
+    if (dead || !s) return; dead = true;
+    if (fast) { s.remove(); s = null; return; }
+    s.classList.add('out');
+    setTimeout(function () { if (s) { s.remove(); s = null; } }, 1100);
+  }
+  if (img) { img.addEventListener('error', function () { kill(true); }); }
+  setTimeout(function () {
+    ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(function (t) {
+      window.addEventListener(t, function () { kill(true); }, { once: true, passive: true });
+    });
+  }, 400);
+  requestAnimationFrame(function () { requestAnimationFrame(function () { s.classList.add('in'); }); });
+  setTimeout(function () { kill(false); }, 3000);
+})();
+
+</script>
+<!--/LANDING-SPLASH-->
+
+<div class="gfband" role="img" aria-label="GeodeForge — artisan webtool design">
+  <img class="b-wm" src="assets/band-wordmark.webp" alt="" width="588" height="96"/>
+  <img class="b-cl" src="assets/band-cluster.webp" alt="" width="320" height="320"/>
+  <img class="b-st" src="assets/band-strap.webp" alt="" width="649" height="56"/>
+</div>
+
+<header class="bar">
+  <a class="brand" href="index.html">
+    <img src="assets/geode-white-fill-mark.svg" alt="" width="26" height="26"/>
+    <span>GeodeQR</span>
+  </a>
+  <nav>
+    <a href="#bulk" data-i="bulk">Bulk</a>
+    <a href="#verify" data-i="verify-nav">Verify</a>
+    <a href="https://github.com/GeodeForge" rel="noopener" data-i="source">Source</a>
+    <a href="contact.html" data-i="contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+
+  <section class="hero">
+    <h1 data-i="tagline">QR codes that never expire.</h1>
+    <p class="sub" data-i="sub"></p>
+
+    <div class="gen">
+      <div class="pane">
+        <div class="pills" id="pills" role="tablist"></div>
+        <div class="fields" id="fields"></div>
+      </div>
+
+      <div class="pane preview">
+        <div class="codewrap"><canvas id="qc" width="440" height="440" aria-label="QR code"></canvas></div>
+
+        <div class="optrow">
+          <label class="cb"><input type="checkbox" id="cicon" checked/> <span data-i="iconInImage"></span></label>
+          <label class="cb"><input type="checkbox" id="ctext" checked/> <span data-i="textInImage"></span></label>
+          <label class="cb"><input type="checkbox" id="trans"/> <span data-i="transL"></span></label>
+        </div>
+        <small class="warn-note" data-i="transNote"></small>
+
+        <div class="dlrow">
+          <fieldset class="dlbox">
+            <legend data-i="downloadAs">Download as</legend>
+            <button id="png" class="primary">PNG</button>
+            <button id="svg">SVG</button>
+            <button id="pdf">PDF</button>
+            <button id="eps">EPS</button>
+            <button id="jpg">JPG</button>
+          </fieldset>
+          <div class="sharewrap">
+            <button id="shareBtn" class="sharebtn" type="button"
+                    aria-haspopup="true" aria-expanded="false">
+              <span data-i="share">Share</span><i class="caret" aria-hidden="true"></i>
+            </button>
+            <div class="sharemenu" id="sharemenu" hidden></div>
+          </div>
+        </div>
+        <small class="fmt-note" data-i="fmtNote"></small>
+        <div class="advrow">
+          <button id="adv" class="advbtn" type="button" data-i="advanced">Advanced settings</button>
+
+          <button id="vscan" type="button" hidden data-i="verifyBtn">Scan-check</button>
+        </div>
+        <small id="vmsg" class="vmsg" hidden></small>
+
+        <div id="advp" hidden>
+          <div class="ctl">
+            <input id="shape" type="range" min="0" max="70" value="70" step="1" aria-label="shape"/>
+            <div class="ends"><span data-i="classic"></span><span data-i="geode"></span></div>
+          </div>
+          <div class="ctl">
+            <input id="hue" type="range" min="0" max="360" value="283" step="1" aria-label="colour"/>
+            <div class="ends"><span data-i="colour"></span><span class="sw"><i class="chip" id="chip"></i><span id="ratio">—</span></span></div>
+          </div>
+          <div class="ctl">
+            <input id="shading" type="range" min="0" max="100" value="52.5" step="0.5" aria-label="shading"/>
+            <div class="ends"><span data-i="min"></span><span data-i="shading"></span><span data-i="max"></span></div>
+          </div>
+
+          <p class="badge" id="badge" aria-live="polite"><i class="dot"></i><span data-i="scannable"></span></p>
+
+          <div class="optrow">
+            <label class="inline"><span data-i="frame"></span>
+              <select id="frame">
+                <option value="none" data-i="frames.none"></option>
+                <option value="bar" data-i="frames.bar"></option>
+                <option value="full" data-i="frames.full"></option>
+              </select>
+            </label>
+            <input id="cta" type="text" maxlength="32" hidden aria-label="Frame text"/>
+          </div>
+
+          <label class="arow"><span data-i="font"></span>
+            <select id="font">
+              <option value="" style="font-family:system-ui" data-i="fonts.def"></option>
+              <option value="system-ui, Arial, sans-serif" style="font-family:system-ui,Arial,sans-serif" data-i="fonts.sans"></option>
+              <option value="Georgia, 'Times New Roman', serif" style="font-family:Georgia,'Times New Roman',serif" data-i="fonts.serif"></option>
+              <option value="ui-monospace, Consolas, monospace" style="font-family:ui-monospace,Consolas,monospace" data-i="fonts.mono"></option>
+              <option value="'Trebuchet MS', system-ui, sans-serif" style="font-family:'Trebuchet MS',system-ui,sans-serif" data-i="fonts.round"></option>
+              <option value="'Palatino Linotype', Palatino, Georgia, serif" style="font-family:'Palatino Linotype',Palatino,Georgia,serif" data-i="fonts.eleg"></option>
+            </select>
+          </label>
+          <label class="arow"><span data-i="textColour"></span>
+            <input id="tcol" type="color" value="#340A4A"/>
+          </label>
+          <div class="arow"><span data-i="textStyle"></span>
+            <div class="biu" role="group" aria-label="Text style">
+              <button type="button" data-k="bold" style="font-weight:700">B</button>
+              <button type="button" data-k="ital" style="font-style:italic">I</button>
+              <button type="button" data-k="und" style="text-decoration:underline">U</button>
+            </div>
+          </div>
+
+          <label class="arow"><span data-i="fontSize"></span>
+            <input id="fsize" type="range" min="60" max="120" value="100" step="5" aria-label="Text size"/>
+          </label>
+
+          <div class="exp">
+            <label><span data-i="sizeL"></span>
+              <select id="size"><option>512</option><option selected>1024</option><option>2048</option></select>
+            </label>
+            <label><span data-i="eccL"></span>
+              <select id="ecc">
+                <option value="H" selected>H</option>
+                <option value="Q">Q</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+              </select>
+            </label>
+          </div>
+          <small id="eccNote" data-i="eccLocked"></small>
+        </div>
+
+        <p class="promise" data-i="promise"></p>
+        <p class="err" id="err" role="alert" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div class="strip" id="strip" hidden>
+      <a id="printer" target="_blank" rel="noopener" data-i="printer"></a>
+
+      <p class="maps"><span data-i="mapAlt"></span>: <span id="mapAlts"></span></p>
+
+      <a id="stickers" hidden rel="noopener sponsored" data-i="stickers"></a>
+      <p class="disc" id="disc" hidden data-i="affiliate"></p>
+    </div>
+  </section>
+
+  <div class="duo">
+
+  <section class="reader" id="reader" hidden>
+    <h2 data-i="readTitle"></h2>
+
+    <label class="dropzone rdz" id="drop">
+      <input type="file" id="rfile" accept="image/*"/>
+      <span class="pick" data-i="readPick"></span>
+      <small data-i="readBody"></small>
+    </label>
+    <div id="rout" hidden>
+      <p class="rhost" id="rhost" hidden><span data-i="readHost"></span> <strong id="rhostv"></strong></p>
+      <pre id="rtext" hidden></pre>
+      <p class="err" id="rnone" hidden data-i="readNone"></p>
+      <button id="rcopy" type="button" hidden data-i="readCopy"></button>
+    </div>
+  </section>
+
+  <section class="bulk" id="bulk">
+    <h2 data-i="bulkTitle"></h2>
+    <p data-i="bulkBody"></p>
+    <label for="csv" class="filelabel" data-i="csvLabel"></label>
+    <input type="file" id="csv" accept=".csv,text/csv"/>
+    <button id="bulkGo" data-i="bulkGo"></button>
+    <p class="hint" id="bulkHint"></p>
+  </section>
+  </div>
+
+  <section class="verify" id="verify">
+    <p class="whyfree" data-i="whyFree"></p>
+    <h2 data-i="verify"></h2>
+    <p data-i="verifyBody"></p>
+    <p><a href="https://github.com/GeodeForge" rel="noopener" data-i="sourceLink"></a></p>
+
+    <p><span data-i="feedback"></span>
+    <a href="mailto:qr@geodeforge.com?subject=GeodeQR%20%E2%80%94%20double-check">qr@geodeforge.com</a></p>
+    <p class="kicker" data-i="kicker"></p>
+  </section>
+
+  <section class="sponsor">
+    <h2 data-i="sponsorTitle"></h2>
+    <p data-i="sponsorBody"></p>
+    <a class="btn" href="mailto:qr@geodeforge.com?subject=Sponsor%20GeodeQR" data-i="sponsorCta">Sponsor this slot →</a>
+  </section>
+
+  <section class="share" id="share">
+    <h2 data-i="shareTitle"></h2>
+    <p data-i="shareBody"></p>
+
+    <div class="shares" id="shares"></div>
+  </section>
+
+  <section class="shelf">
+    <h2 data-i="moreTitle"></h2>
+    <p data-i="moreBody"></p>
+    <a href="https://geodeforge.com" data-i="moreLink">Check at geodeforge.com →</a>
+  </section>
+</main>
+
+<footer>
+  <span>
+    <a href="https://github.com/GeodeForge" rel="noopener" data-i="source">Source</a> ·
+    <a href="privacy.html" data-i="privacy">Privacy</a> ·
+    <a href="contact.html" data-i="contact">Contact</a> ·
+    <a href="mailto:qr@geodeforge.com">qr@geodeforge.com</a>
+  </span>
+  <span>A <a href="https://geodeforge.com">GeodeForge</a> tool</span>
+</footer>
+
+<div class="gfband" role="img" aria-label="GeodeForge — artisan webtool design">
+  <img class="b-wm" src="assets/band-wordmark.webp" alt="" width="588" height="96"/>
+  <img class="b-cl" src="assets/band-cluster.webp" alt="" width="320" height="320"/>
+  <img class="b-st" src="assets/band-strap.webp" alt="" width="649" height="56"/>
+</div>
+
+<script src="src/qr.js?v=1"></script>
+<script src="src/render.js?v=1"></script>
+<script src="src/content.js?v=1"></script>
+<script src="src/i18n.js?v=1"></script>
+<script src="src/zip.js?v=1"></script>
+<script src="src/decode.js?v=1"></script>
+<script src="src/export.js?v=1"></script>
+<script src="app.js?v=1"></script>
+<script>
+(function () {
+  setTimeout(function () {
+    if (window.__geodeBooted) return;
+    var M = {
+      en: 'Part of the app has not loaded yet. Refresh the page to get the complete version.',
+      zh: '应用尚未完全加载。请刷新页面以获取完整版本。',
+      es: 'Una parte de la aplicación aún no se ha cargado. Actualiza la página para obtener la versión completa.',
+      ar: 'لم يكتمل تحميل التطبيق بعد. حدّث الصفحة للحصول على النسخة الكاملة.'
+    };
+    var l = ((navigator.languages && navigator.languages[0]) || navigator.language || 'en')
+      .toLowerCase().slice(0, 2);
+    var p = document.createElement('p');
+    p.className = 'err';
+    p.setAttribute('role', 'alert');
+    p.textContent = (M[l] || M.en) +
+      (window.__geodeBoot.errs.length ? ' [' + window.__geodeBoot.errs.join('; ') + ']' : '');
+    var wrap = document.querySelector('.codewrap');
+    if (wrap) wrap.appendChild(p); else document.body.appendChild(p);
+  }, 2500);
+})();
+
+</script>
+</body>
+</html>
