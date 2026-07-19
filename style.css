@@ -184,11 +184,12 @@ button.primary{background:var(--btn);border-color:var(--btn);color:#fff;flex:1}
 
 .whyfree{color:var(--ink);margin:0 0 16px}
 
-.verify p,.bulk p,.sponsor p,.shelf p,.reader p{color:var(--muted);margin:0 0 10px}
+.verify p,.bulk p,.sponsor p,.morefrom p,.reader p{color:var(--muted);margin:0 0 10px}
 .bulk p,.reader p{max-width:600px}
 
-.verify,.sponsor,.share,.shelf{font-size:14px}
-.verify h2,.sponsor h2,.share h2,.shelf h2{font-size:15.5px}
+.verify,.sponsor,.share,.morefrom{font-size:14px}
+.morefrom .sibs{display:flex;flex-direction:column;gap:6px;margin:6px 0 12px;font-size:14px}
+.verify h2,.sponsor h2,.share h2,.morefrom h2{font-size:15.5px}
 .verify .whyfree{color:var(--ink)}
 
 .bulk .filelabel{display:block;margin:18px 0 0}
