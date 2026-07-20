@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Make a QR code in Chinese, Arabic, or any language that scans</title>
+<meta name="description" content="Non-Latin text — Chinese, Japanese, Korean, Arabic, Cyrillic — comes out as gibberish when a QR code labels its bytes with the wrong encoding. GeodeQR stores your text as UTF-8 so it scans, and you can read the code back on your own device to confirm every character survived."/>
+<link rel="canonical" href="https://geodeforge.com/geodeqr/any-language/"/>
+<link rel="alternate" hreflang="en" href="https://geodeforge.com/geodeqr/any-language/"/>
+<link rel="alternate" hreflang="x-default" href="https://geodeforge.com/geodeqr/any-language/"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="GeodeForge"/>
+<meta property="og:title" content="GeodeQR — free QR codes that never expire"/>
+<meta property="og:description" content="Free QR code generator. No account, no expiry, no watermark. Nothing leaves your browser."/>
+<meta property="og:url" content="https://geodeforge.com/geodeqr/any-language/"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="GeodeQR — free QR codes that never expire"/>
+<meta name="twitter:description" content="Free QR code generator. No account, no expiry, no watermark. Nothing leaves your browser."/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"GeodeQR","url":"https://geodeforge.com/geodeqr/","description":"Free QR code generator. No account, no expiry, no watermark. Nothing leaves your browser.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any — runs entirely in the browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Do the QR codes expire?","acceptedAnswer":{"@type":"Answer","text":"No. A QR code is just an encoding of the text or link you give it — GeodeQR draws it in your browser and it works forever. There is no redirect and no account, so nothing can switch it off."}},{"@type":"Question","name":"Is anything uploaded when I make a code?","acceptedAnswer":{"@type":"Answer","text":"No. The code is generated in JavaScript inside your own browser tab; nothing you type leaves your device. You can check in your browser's Network tab."}},{"@type":"Question","name":"Is there a watermark or a sign-up?","acceptedAnswer":{"@type":"Answer","text":"Neither. No watermark on the image and no account to create — download it and use it anywhere."}},{"@type":"Question","name":"Can it encode non-Latin text?","acceptedAnswer":{"@type":"Answer","text":"Yes. Chinese, Arabic, and other scripts encode correctly so the codes scan for those languages."}}]}</script>
+<link rel="icon" href="../assets/geodeqr-eye-64.png" type="image/png"/>
+<link rel="stylesheet" href="../style.css?v=1"/>
+<script>
+window.__geodeBoot = { errs: [] };
+window.addEventListener('error', function (e) {
+  var f = (e && e.filename) || (e && e.target && e.target.src) || '';
+  window.__geodeBoot.errs.push(((e && e.message) || 'load error') + ' @ ' +
+    String(f).split('/').pop().split('?')[0] + ':' + ((e && e.lineno) || 0));
+}, true);
+
+</script>
+</head>
+<body data-type="text" data-lang="en">
+
+
+<div class="gfband" role="img" aria-label="GeodeForge — artisan webtool design">
+  <img class="b-wm" src="../assets/band-wordmark.webp" alt="" width="588" height="96"/>
+  <img class="b-cl" src="../assets/band-cluster.webp" alt="" width="320" height="320"/>
+  <img class="b-st" src="../assets/band-strap.webp" alt="" width="649" height="56"/>
+</div>
+
+<header class="bar">
+  <a class="brand" href="../index.html">
+    <img src="../assets/geode-white-fill-mark.svg" alt="" width="26" height="26"/>
+    <span>GeodeQR</span>
+  </a>
+  <nav>
+    <a href="#bulk" data-i="bulk">Bulk</a>
+    <a href="#verify" data-i="verify-nav">Verify</a>
+    <a href="https://github.com/GeodeForge" rel="noopener" data-i="source">Source</a>
+    <a href="../contact.html" data-i="contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+
+  <section class="hero">
+    <h2 data-i="tagline">QR codes that never expire.</h2>
+    <p class="sub" data-i="sub">Free, no account, nothing leaves your browser — and every style stays inside limits proven against a deliberately bad scanner.</p>
+
+    <div class="gen">
+      <div class="pane">
+        <div class="pills" id="pills" role="tablist"></div>
+        <div class="fields" id="fields"></div>
+      </div>
+
+      <div class="pane preview">
+        <div class="codewrap"><canvas id="qc" width="440" height="440" aria-label="QR code"></canvas></div>
+
+        <div class="optrow">
+          <label class="cb"><input type="checkbox" id="cicon" checked/> <span data-i="iconInImage">Centre icon</span></label>
+          <label class="cb"><input type="checkbox" id="ctext" checked/> <span data-i="textInImage">Title &amp; caption in the image</span></label>
+          <label class="cb"><input type="checkbox" id="trans"/> <span data-i="transL">Transparent background</span></label>
+        </div>
+        <small class="warn-note" data-i="transNote">A transparent code keeps scanning on any light background.</small>
+
+        <div class="dlrow">
+          <fieldset class="dlbox">
+            <legend data-i="downloadAs">Download as</legend>
+            <button id="png" class="primary">PNG</button>
+            <button id="svg">SVG</button>
+            <button id="pdf">PDF</button>
+            <button id="eps">EPS</button>
+            <button id="jpg">JPG</button>
+          </fieldset>
+          <div class="sharewrap">
+            <button id="shareBtn" class="sharebtn" type="button"
+                    aria-haspopup="true" aria-expanded="false">
+              <span data-i="share">Share</span><i class="caret" aria-hidden="true"></i>
+            </button>
+            <div class="sharemenu" id="sharemenu" hidden></div>
+          </div>
+        </div>
+        <small class="fmt-note" data-i="fmtNote">PDF ships a vector matrix with the full design. EPS is the bare vector code. PNG and SVG stay sharpest — JPG is for systems that require it.</small>
+        <div class="advrow">
+          <button id="adv" class="advbtn" type="button" data-i="advanced">Advanced settings</button>
+
+          <button id="vscan" type="button" hidden data-i="verifyBtn">Scan-check</button>
+        </div>
+        <small id="vmsg" class="vmsg" hidden></small>
+
+        <div id="advp" hidden>
+          <div class="ctl">
+            <input id="shape" type="range" min="0" max="70" value="70" step="1" aria-label="shape"/>
+            <div class="ends"><span data-i="classic">classic</span><span data-i="geode">geode</span></div>
+          </div>
+          <div class="ctl">
+            <input id="hue" type="range" min="0" max="360" value="283" step="1" aria-label="colour"/>
+            <div class="ends"><span data-i="colour">colour</span><span class="sw"><i class="chip" id="chip"></i><span id="ratio">—</span></span></div>
+          </div>
+          <div class="ctl">
+            <input id="shading" type="range" min="0" max="100" value="52.5" step="0.5" aria-label="shading"/>
+            <div class="ends"><span data-i="min">min</span><span data-i="shading">shading</span><span data-i="max">max</span></div>
+          </div>
+
+          <p class="badge" id="badge" aria-live="polite"><i class="dot"></i><span data-i="scannable">Styling stays inside limits proven against a deliberately weak scanner</span></p>
+
+          <div class="optrow">
+            <label class="inline"><span data-i="frame">Frame</span>
+              <select id="frame">
+                <option value="none" data-i="frames.none">None</option>
+                <option value="bar" data-i="frames.bar">Labelled bar</option>
+                <option value="full" data-i="frames.full">Full border</option>
+              </select>
+            </label>
+            <input id="cta" type="text" maxlength="32" hidden aria-label="Frame text"/>
+          </div>
+
+          <label class="arow"><span data-i="font">Font</span>
+            <select id="font">
+              <option value="" style="font-family:system-ui" data-i="fonts.def">Default</option>
+              <option value="system-ui, Arial, sans-serif" style="font-family:system-ui,Arial,sans-serif" data-i="fonts.sans">Sans</option>
+              <option value="Georgia, 'Times New Roman', serif" style="font-family:Georgia,'Times New Roman',serif" data-i="fonts.serif">Serif</option>
+              <option value="ui-monospace, Consolas, monospace" style="font-family:ui-monospace,Consolas,monospace" data-i="fonts.mono">Mono</option>
+              <option value="'Trebuchet MS', system-ui, sans-serif" style="font-family:'Trebuchet MS',system-ui,sans-serif" data-i="fonts.round">Rounded</option>
+              <option value="'Palatino Linotype', Palatino, Georgia, serif" style="font-family:'Palatino Linotype',Palatino,Georgia,serif" data-i="fonts.eleg">Elegant</option>
+            </select>
+          </label>
+          <label class="arow"><span data-i="textColour">Text colour</span>
+            <input id="tcol" type="color" value="#340A4A"/>
+          </label>
+          <div class="arow"><span data-i="textStyle">Style</span>
+            <div class="biu" role="group" aria-label="Text style">
+              <button type="button" data-k="bold" style="font-weight:700">B</button>
+              <button type="button" data-k="ital" style="font-style:italic">I</button>
+              <button type="button" data-k="und" style="text-decoration:underline">U</button>
+            </div>
+          </div>
+
+          <label class="arow"><span data-i="fontSize">Text size</span>
+            <input id="fsize" type="range" min="60" max="120" value="100" step="5" aria-label="Text size"/>
+          </label>
+
+          <div class="exp">
+            <label><span data-i="sizeL">Size</span>
+              <select id="size"><option>512</option><option selected>1024</option><option>2048</option></select>
+            </label>
+            <label><span data-i="eccL">Error correction</span>
+              <select id="ecc">
+                <option value="H" selected>H</option>
+                <option value="Q">Q</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+              </select>
+            </label>
+          </div>
+          <small id="eccNote" data-i="eccLocked">Error correction is held at H while styling is on — that headroom is what makes the styling safe.</small>
+        </div>
+
+        <p class="promise" data-i="promise">This code doesn't need us. It keeps working even if this site disappears.</p>
+        <p class="err" id="err" role="alert" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div class="strip" id="strip" hidden>
+      <a id="printer" target="_blank" rel="noopener" data-i="printer">Need it on paper? Find a printer near you</a>
+
+      <p class="maps"><span data-i="mapAlt">Other map providers</span>: <span id="mapAlts"></span></p>
+
+      <a id="stickers" hidden rel="noopener sponsored" data-i="stickers">Order stickers &amp; labels online</a>
+      <p class="disc" id="disc" hidden data-i="affiliate">That's an affiliate link — if you order, we get a small cut at no cost to you. It's how the site stays free.</p>
+    </div>
+  </section>
+
+  <div class="duo">
+
+  <section class="reader" id="reader" hidden>
+    <h2 data-i="readTitle">Read a code</h2>
+
+    <label class="dropzone rdz" id="drop">
+      <input type="file" id="rfile" accept="image/*"/>
+      <span class="pick" data-i="readPick">Choose an image or drop it here</span>
+      <small data-i="readBody">Drop in any QR image and see exactly what is inside — decoded on this page, on your device, sent nowhere. If a code you made elsewhere shows a stranger's domain instead of your link, every scan is passing through that domain first.</small>
+    </label>
+    <div id="rout" hidden>
+      <p class="rhost" id="rhost" hidden><span data-i="readHost">This code is a link to</span> <strong id="rhostv"></strong></p>
+      <pre id="rtext" hidden></pre>
+      <p class="err" id="rnone" hidden data-i="readNone">No QR code found in that image.</p>
+      <button id="rcopy" type="button" hidden data-i="readCopy">Copy contents</button>
+    </div>
+  </section>
+
+  <section class="bulk" id="bulk">
+    <h2 data-i="bulkTitle">Bulk codes from a spreadsheet</h2>
+    <p data-i="bulkBody">Upload a CSV. Get a ZIP of codes — generated in your browser, free.</p>
+    <label for="csv" class="filelabel" data-i="csvLabel">CSV — column 1 is the content, column 2 (optional) is the filename</label>
+    <input type="file" id="csv" accept=".csv,text/csv"/>
+    <button id="bulkGo" data-i="bulkGo">Generate ZIP</button>
+    <p class="hint" id="bulkHint"></p>
+  </section>
+  </div>
+
+  <section class="verify" id="verify">
+    <p class="whyfree" data-i="whyFree">Your QR code points exactly where you tell it. Nothing sits between the scan and your link, because there is no server involved at all. That is also why it is free: a static code costs us almost nothing to make, so we do not charge for it, do not watermark it, and do not put anything inside it. Your code stays yours.</p>
+    <h2 data-i="verify">We invite you to double-check our work.</h2>
+    <p data-i="verifyBody">Open your browser’s developer tools, switch to the Network tab, and make a code. Nothing leaves your device.</p>
+    <p><a href="https://github.com/GeodeForge" rel="noopener" data-i="sourceLink">The whole source is on GitHub. Read it, fork it, run it offline.</a></p>
+
+    <p><span data-i="feedback">Found a bug, or a claim that doesn’t hold up? Tell us — an example helps enormously, though we understand if yours is too sensitive to share:</span>
+    <a href="mailto:qr@geodeforge.com?subject=GeodeQR%20%E2%80%94%20double-check">qr@geodeforge.com</a></p>
+    <p class="kicker" data-i="kicker">That’s the difference between a privacy policy and a fact.</p>
+  </section>
+
+  <section class="sponsor">
+    <h2 data-i="sponsorTitle">This slot pays for the page</h2>
+    <p data-i="sponsorBody">One static, labeled sponsor link — an image we host and a plain link. No ad network, no tracking script, no third-party request. That is the entire business model, and it is why nothing above has a price.</p>
+    <a class="btn" href="mailto:qr@geodeforge.com?subject=Sponsor%20GeodeQR" data-i="sponsorCta">Sponsor this slot →</a>
+  </section>
+
+  <section class="share" id="share">
+    <h2 data-i="shareTitle">Tell someone it exists</h2>
+    <p data-i="shareBody">This project has no marketing budget and no growth team — it spreads or it does not.</p>
+
+    <div class="shares" id="shares"></div>
+  </section>
+
+  <section class="prose">
+    <h1>Make a QR code in any language that actually scans.</h1>
+    <p class="sub">Type Chinese, Japanese, Korean, Arabic — any script — into GeodeQR, and the characters come through. The text is stored as <strong>UTF-8</strong>, the encoding today's phones read, and you can read the code back to check it before you print.</p>
+  </section>
+
+<section class="prose">
+    <h2>Why non-Latin characters come out scrambled</h2>
+    <p>A QR code doesn't store letters. It stores <strong>bytes</strong>, plus a small note about how to turn those bytes back into text. When the bytes are written in one encoding and the scanner reads them as another, every character outside the basic Latin set turns to mojibake — 你好 comes out as <code>ä½&nbsp;å¥½</code>, مرحبا as <code>Ù…Ø±Ø­Ø¨Ø§</code>. The code scanned perfectly. The text inside was just labelled wrong.</p>
+    <p>So the fix isn't a fancier code. It's writing the bytes in the encoding a phone actually expects — and, where it helps, saying so inside the code.</p>
+  </section>
+
+  <section class="prose">
+    <h2>How GeodeQR writes it</h2>
+    <p>Your text goes in as <strong>UTF-8</strong> — the encoding modern phones and cameras expect — and GeodeQR can add the standard marker (an ECI header) that declares it explicitly, so a reader doesn't have to guess. Chinese, Japanese, Korean, Arabic, Cyrillic, Greek, Hebrew, Thai, Vietnamese, accented Latin, and emoji all go in as the same well-formed bytes.</p>
+    <p>The code is built right here in this tab, by our own encoder — nothing leaves your device.</p>
+  </section>
+
+  <section class="prose">
+    <h2>Right-to-left scripts</h2>
+    <p>Arabic, Hebrew, Farsi and Urdu store and scan exactly like anything else — the bytes carry the characters, and your phone lays them out right-to-left when it shows them. There's nothing to switch on.</p>
+  </section>
+
+  <section class="prose">
+    <h2>Check it before you print</h2>
+    <p>Don't take our word for it — read the code back. <a href="../read/"><strong>Read a code</strong></a> decodes any QR on your device and shows you the exact text inside it. Make your code, read it back, confirm every character is intact, <em>then</em> send it to the printer.</p>
+    <p>If it's going somewhere you can't reprint — a sign, a menu, a package run — that ten-second check is worth it. A code that scans is not the same as a code that says what you meant.</p>
+  </section>
+
+  <section class="prose">
+    <h2>If a reader still shows the wrong characters</h2>
+    <p>A few older scanners guess an encoding instead of reading the one that's declared, and some assume a regional default. If that happens, read the code with the tool on this page: if the text is right there, the code is correct and the reader is the weak link. Most current phone cameras read UTF-8 without being asked.</p>
+  </section>
+
+  <section class="morefrom">
+    <h2 data-i="moreTitle">More from GeodeForge</h2>
+    <p data-i="moreBody">GeodeForge is a one-person studio that crafts open-source tools that do what they say, and let you check — in your browser.</p>
+    <div class="sibs">
+      <a href="https://geodeforge.com/geodepdf/">GeodePDF — PDF tools that never upload your file</a>
+      <a href="https://geodeforge.com/geodecode/">GeodeCode — clean code and text before you paste it</a>
+    </div>
+    <a href="https://geodeforge.com" data-i="moreLink">Check at geodeforge.com →</a>
+  </section>
+</main>
+
+<footer>
+  <span>
+    <a href="https://github.com/GeodeForge" rel="noopener" data-i="source">Source</a> ·
+    <a href="../privacy.html" data-i="privacy">Privacy</a> ·
+    <a href="../contact.html" data-i="contact">Contact</a> ·
+    <a href="mailto:qr@geodeforge.com">qr@geodeforge.com</a>
+  </span>
+  <span>&copy; 2026 &middot; A <a href="https://geodeforge.com">GeodeForge</a> tool</span>
+</footer>
+
+<div class="gfband" role="img" aria-label="GeodeForge — artisan webtool design">
+  <img class="b-wm" src="../assets/band-wordmark.webp" alt="" width="588" height="96"/>
+  <img class="b-cl" src="../assets/band-cluster.webp" alt="" width="320" height="320"/>
+  <img class="b-st" src="../assets/band-strap.webp" alt="" width="649" height="56"/>
+</div>
+
+<script src="../src/qr.js?v=1"></script>
+<script src="../src/render.js?v=1"></script>
+<script src="../src/content.js?v=1"></script>
+<script src="../src/i18n.js?v=1"></script>
+<script src="../src/zip.js?v=1"></script>
+<script src="../src/decode.js?v=1"></script>
+<script src="../src/export.js?v=1"></script>
+<script src="../app.js?v=1"></script>
+<script>
+(function () {
+  setTimeout(function () {
+    if (window.__geodeBooted) return;
+    var M = {
+      en: 'Part of the app has not loaded yet. Refresh the page to get the complete version.',
+      zh: '应用尚未完全加载。请刷新页面以获取完整版本。',
+      es: 'Una parte de la aplicación aún no se ha cargado. Actualiza la página para obtener la versión completa.',
+      ar: 'لم يكتمل تحميل التطبيق بعد. حدّث الصفحة للحصول على النسخة الكاملة.'
+    };
+    var l = ((navigator.languages && navigator.languages[0]) || navigator.language || 'en')
+      .toLowerCase().slice(0, 2);
+    var p = document.createElement('p');
+    p.className = 'err';
+    p.setAttribute('role', 'alert');
+    p.textContent = (M[l] || M.en) +
+      (window.__geodeBoot.errs.length ? ' [' + window.__geodeBoot.errs.join('; ') + ']' : '');
+    var wrap = document.querySelector('.codewrap');
+    if (wrap) wrap.appendChild(p); else document.body.appendChild(p);
+  }, 2500);
+})();
+
+</script>
+</body>
+</html>
