@@ -141,13 +141,17 @@ button.primary{background:var(--btn);border-color:var(--btn);color:#fff;flex:1}
 
 .dropzone{display:flex;align-items:center;justify-content:center;gap:8px;
   border:2px dashed var(--line);border-radius:12px;padding:26px 16px;cursor:pointer;
-  color:var(--muted);font-size:14px;background:var(--card);margin-top:6px;max-width:600px}
+  color:var(--muted);font-size:14px;background:var(--card);margin-top:6px;max-width:600px;position:relative}
 .dropzone:hover,.dropzone.on{border-color:var(--gem);color:var(--ink)}
+.dropzone:focus-within{border-color:var(--gem);color:var(--ink);outline:3px solid var(--gem);outline-offset:3px}
 
 .rdz{flex-direction:column;gap:10px;padding:58px 18px;text-align:center}
 .rdz .pick{font-weight:600;color:var(--text);font-size:16px}
 .rdz small{color:var(--muted);font-size:13px;line-height:1.55;max-width:72ch;display:block}
-.dropzone input[type=file]{display:none}
+/* The file input stays in the tab order, hidden from sight only, so Tab reaches it and
+   Enter or Space opens the file chooser. The box above shows where the keyboard is. */
+.dropzone input[type=file]{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;
+  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 #rout{margin-top:12px}
 #rtext{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;
   font-family:var(--mono);font-size:13px;white-space:pre-wrap;word-break:break-all;
